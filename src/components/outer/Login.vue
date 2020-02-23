@@ -27,6 +27,7 @@
               ></v-text-field>
               <v-btn
                 :disabled="!valid"
+                :loading="loading"
                 color="success"
                 class="ma-4"
                 @click="login"
@@ -53,6 +54,7 @@ export default {
   },
   data: () => ({
     valid: false,
+    loading: false,
     email: "",
     password: "",
     emailRules: [
@@ -71,11 +73,13 @@ export default {
   methods: {
     login: function() {
       console.log("logging in");
+      this.loading = true;
       firebase
         .auth()
         .signInWithEmailAndPassword(this.email, this.password)
         .then(user => {
           console.log(user);
+          this.loading = false;
           this.CREATE_SNACKBAR({
             state: true,
             color: "success",
@@ -84,6 +88,7 @@ export default {
           this.$router.replace("/");
         })
         .catch(err => {
+          this.loading = false;
           this.CREATE_SNACKBAR({
             state: true,
             color: "error",

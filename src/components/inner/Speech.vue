@@ -97,7 +97,11 @@
                 </v-btn>
               </v-row>
               <v-row align="center" justify="end" v-else>
-                <v-btn color="primary" @click="saveEditAction">
+                <v-btn
+                  color="primary"
+                  :loading="loading"
+                  @click="saveEditAction"
+                >
                   Submit
                 </v-btn>
                 <v-btn color="error" class="mx-2" @click="cancelEditAction">
@@ -116,6 +120,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from "vuex";
 var moment = require("moment");
+import db from "../firebaseInit";
 
 import NewSpeech from "@/components/inner/NewSpeech.vue";
 
@@ -126,6 +131,7 @@ export default {
   },
   data: () => ({
     valid: true,
+    loading: false,
     editMode: false,
     editData: {},
     nameRules: [
@@ -147,24 +153,50 @@ export default {
     ...mapGetters(["getColor"])
   },
   methods: {
-    ...mapMutations(["DELETE_SELECTED_SPEECH", "EDIT_SPEECH"]),
     getDate: function(date) {
       return moment(date, "X").fromNow();
     },
     deleteSpeech: function() {
-      this.DELETE_SELECTED_SPEECH();
+      db.collection("speech")
+        .doc(this.speech.id)
+        .delete()
+        .then(() => {
+          this.DELETE_SELECTED_SPEECH();
+          this.CREATE_SNACKBAR({
+            state: true,
+            color: "error",
+            content: "Speech deleted"
+          });
+        });
     },
     editSpeech: function() {
       this.editData = { ...this.speech };
       this.editMode = true;
     },
     saveEditAction: function() {
-      this.EDIT_SPEECH(this.editData);
-      this.editMode = false;
+      this.loading = true;
+      db.collection("speech")
+        .doc(this.speech.id)
+        .set(this.editData)
+        .then(() => {
+          this.EDIT_SPEECH(this.editData);
+          this.CREATE_SNACKBAR({
+            state: true,
+            color: "success",
+            content: "Speech edited"
+          });
+          this.loading = false;
+          this.editMode = false;
+        });
     },
     cancelEditAction: function() {
       this.editMode = false;
-    }
+    },
+    ...mapMutations([
+      "DELETE_SELECTED_SPEECH",
+      "EDIT_SPEECH",
+      "CREATE_SNACKBAR"
+    ])
   }
 };
 </script>

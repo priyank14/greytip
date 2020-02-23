@@ -55,6 +55,7 @@
           <v-card-actions>
             <v-btn
               color="primary"
+              :loading="loading"
               style="margin: auto;"
               :disabled="!valid"
               @click="submitSpeech()"
@@ -70,11 +71,13 @@
 
 <script>
 import { mapMutations, mapGetters } from "vuex";
+import db from "../firebaseInit";
 
 export default {
   name: "NewSpeech",
   data: () => ({
     valid: false,
+    loading: false,
     name: "",
     text: "",
     author: "",
@@ -104,9 +107,23 @@ export default {
         keywords: this.keywords,
         date: new Date()
       };
-      this.CREATE_SPEECH(obj);
+      this.loading = true;
+      db.collection("speech")
+        .add(obj)
+        .then(querySnapShot => {
+          this.loading = false;
+          obj.id = querySnapShot.id;
+          console.log(obj);
+          this.CREATE_SPEECH(obj);
+          this.CREATE_SNACKBAR({
+            state: true,
+            color: "success",
+            content: "Speech created"
+          });
+          console.log("Document written with ID: ", querySnapShot.id);
+        });
     },
-    ...mapMutations(["CREATE_SPEECH"])
+    ...mapMutations(["CREATE_SPEECH", "CREATE_SNACKBAR"])
   }
 };
 </script>

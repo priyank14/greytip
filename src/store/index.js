@@ -10,24 +10,7 @@ export default new Vuex.Store({
       color: "",
       content: ""
     },
-    speeches: [
-      {
-        id: 1,
-        name: "pollution",
-        text: "Pollution should be reduced",
-        author: "Priyank Tyagi",
-        keywords: ["air", "smog"],
-        date: 1581279683
-      },
-      {
-        id: 2,
-        name: "Education",
-        text: "Education of delhi is impoved",
-        author: "John Doe",
-        keywords: ["school", "student", "teacher"],
-        date: 1582299683
-      }
-    ],
+    speeches: [],
     search: "",
     selectedSpeechId: null,
     createMode: false,
@@ -76,13 +59,10 @@ export default new Vuex.Store({
         state.selectedSpeechId = null;
       }
     },
+    SET_SPEECHES: (state, payload) => {
+      state.speeches = payload;
+    },
     CREATE_SPEECH: (state, payload) => {
-      let values = Object.values(state.speeches);
-      let lastId = 1;
-      if (values.length > 0) {
-        lastId = values[values.length - 1].id + 1;
-      }
-      payload.id = lastId;
       state.speeches.push(payload);
       state.selectedSpeechId = payload.id;
       state.createMode = false;

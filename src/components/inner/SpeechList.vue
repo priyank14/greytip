@@ -21,12 +21,12 @@
           </v-list-item-content>
         </v-list-item>
         <v-list-item
-          v-for="speech in filterSpeeches"
+          v-for="(speech, index) in filterSpeeches"
           :key="speech.id"
           @click="changeSpeechId(speech.id)"
         >
           <v-list-item-icon>
-            <v-avatar :color="getColorAvatar(speech.id)" size="25">
+            <v-avatar :color="getColorAvatar(index)" size="25">
               <span class="headline"> {{ speech.author.charAt(0) }}</span>
             </v-avatar>
           </v-list-item-icon>
@@ -50,11 +50,6 @@ export default {
       default: true
     }
   },
-  created() {
-    if (this.speeches.length > 0) {
-      this.changeSpeechId(this.speeches[0].id);
-    }
-  },
   data: () => ({
     selected: null,
     colorText: ["red", "teal", "indigo", "blue", "orange"]
@@ -63,7 +58,6 @@ export default {
     filterSpeeches: function() {
       let searchText = this.search.toLowerCase() || "";
       function stringMatch(word) {
-        console.log(word);
         return word.author.toLowerCase().includes(searchText);
       }
       let filtered = this.speeches.filter(stringMatch);
