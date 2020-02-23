@@ -4,13 +4,13 @@
     :app="true"
     :clipped="true"
     :permanent="drawer"
-    style="background-color:#2f3136;height:calc(100vh - 56px)"
+    style="height:calc(100vh - 56px)"
+    :style="'background-color:' + getColor.navColor"
     :disable-resize-watcher="true"
     :disable-route-watcher="true"
     :hide-overlay="true"
-    dark
   >
-    <v-list nav dense>
+    <v-list nav dense :dark="$vuetify.theme.dark">
       <v-list-item-group active-class="text--accent-4" v-model="selected">
         <v-list-item @click="createSpeech()">
           <v-list-item-icon>
@@ -26,10 +26,8 @@
           @click="changeSpeechId(speech.id)"
         >
           <v-list-item-icon>
-            <v-avatar :color="getColor(speech.id)" size="25">
-              <span class="white--text headline">{{
-                speech.author.charAt(0)
-              }}</span>
+            <v-avatar :color="getColorAvatar(speech.id)" size="25">
+              <span class="headline"> {{ speech.author.charAt(0) }}</span>
             </v-avatar>
           </v-list-item-icon>
           <v-list-item-title>
@@ -42,7 +40,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "SpeechList",
@@ -71,7 +69,8 @@ export default {
       let filtered = this.speeches.filter(stringMatch);
       return filtered;
     },
-    ...mapState(["speeches", "selectedSpeechId", "search"])
+    ...mapState(["speeches", "selectedSpeechId", "search"]),
+    ...mapGetters(["getColor"])
   },
   methods: {
     ...mapMutations(["CHANGE_SELECTED_SPEECH", "SET_CREATE_MODE"]),
@@ -79,7 +78,7 @@ export default {
       this.CHANGE_SELECTED_SPEECH(id);
       this.SET_CREATE_MODE(false);
     },
-    getColor: function(index) {
+    getColorAvatar: function(index) {
       return this.colorText[index % this.colorText.length];
     },
     createSpeech() {

@@ -4,11 +4,10 @@
       <v-col cols="10" style="margin: auto;">
         <v-card
           class="mx-auto"
-          style="background:rgb(47, 49, 54)"
-          dark
+          :style="'background-color:' + getColor.cardColor"
           outlined
         >
-          <v-list-item three-line>
+          <v-list-item three-line :dark="$vuetify.theme.dark">
             <v-list-item-content>
               <div class="overline mb-4">
                 <template v-if="!editMode">
@@ -115,10 +114,10 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState, mapGetters, mapMutations } from "vuex";
 var moment = require("moment");
 
-import NewSpeech from "@/components/NewSpeech.vue";
+import NewSpeech from "@/components/inner/NewSpeech.vue";
 
 export default {
   name: "Speech",
@@ -144,7 +143,8 @@ export default {
       const index = element => element.id == this.selectedSpeechId;
       return this.speeches[this.speeches.findIndex(index)];
     },
-    ...mapState(["speeches", "selectedSpeechId"])
+    ...mapState(["speeches", "selectedSpeechId"]),
+    ...mapGetters(["getColor"])
   },
   methods: {
     ...mapMutations(["DELETE_SELECTED_SPEECH", "EDIT_SPEECH"]),

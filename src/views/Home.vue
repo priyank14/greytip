@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import SpeechHome from "@/components/SpeechHome.vue";
+import SpeechHome from "@/components/inner/SpeechHome.vue";
 
 export default {
   name: "Home",

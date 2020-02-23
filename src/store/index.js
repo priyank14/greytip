@@ -5,6 +5,11 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    snackbar: {
+      state: false,
+      color: "",
+      content: ""
+    },
     speeches: [
       {
         id: 1,
@@ -25,7 +30,35 @@ export default new Vuex.Store({
     ],
     search: "",
     selectedSpeechId: null,
-    createMode: false
+    createMode: false,
+    selectedTheme: "Dark",
+    themes: {
+      Light: {
+        navColor: "#f7f7f7",
+        toolbarColor: "#f7f7f7",
+        backColor: "#e0e4eb",
+        cardColor: "#F5F5F5"
+      },
+      Dark: {
+        navColor: "#2f3136",
+        toolbarColor: "#36393f",
+        backColor: "#36393f",
+        cardColor: "#2f3136"
+      },
+      Cosmic: {
+        navColor: "#323159",
+        toolbarColor: "#323159",
+        backColor: "#1b1d36",
+        cardColor: "#323159"
+      }
+    }
+  },
+  getters: {
+    getSnack: state => state.snackbar,
+    getThemes: state => Object.keys(state.themes),
+    getColor: state => {
+      return state.themes[state.selectedTheme];
+    }
   },
   mutations: {
     CHANGE_SELECTED_SPEECH: (state, payload) => {
@@ -65,6 +98,15 @@ export default new Vuex.Store({
         element => element.id == state.selectedSpeechId
       );
       state.speeches.splice(index, 1, payload);
+    },
+    CREATE_SNACKBAR(state, payload) {
+      state.snackbar.state = true;
+      state.snackbar.color = payload.color;
+      state.snackbar.content = payload.content;
+    },
+    SET_THEME(state, payload) {
+      window.localStorage.setItem("theme", payload);
+      state.selectedTheme = payload;
     }
   },
   actions: {},

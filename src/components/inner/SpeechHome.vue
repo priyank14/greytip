@@ -3,7 +3,7 @@
     <SpeechList :drawer="drawer" />
     <TopBar :drawer="drawer" :toggleDrawer="toggleDrawer" />
     <v-content
-      style="background-color:#36393f;color:#fff;height:calc(100vh - 56px);padding-left:0;min-width:350px;overflow: hidden;"
+      style="height:calc(100vh - 56px);padding-left:0;min-width:350px;overflow: hidden;"
     >
       <Speech v-if="!createMode" />
       <NewSpeech v-else />
@@ -14,10 +14,10 @@
 <script>
 import { mapState } from "vuex";
 
-import SpeechList from "@/components/SpeechList.vue";
-import Speech from "@/components/Speech.vue";
-import NewSpeech from "@/components/NewSpeech.vue";
-import TopBar from "@/components/TopBar.vue";
+import SpeechList from "@/components/inner/SpeechList.vue";
+import Speech from "@/components/inner/Speech.vue";
+import NewSpeech from "@/components/inner/NewSpeech.vue";
+import TopBar from "@/components/inner/TopBar.vue";
 
 export default {
   name: "SpeechHome",

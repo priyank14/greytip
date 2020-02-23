@@ -4,8 +4,8 @@
       <v-col cols="10" style="margin: auto;">
         <v-card
           class="mx-auto"
-          style="background:rgb(47, 49, 54)"
-          dark
+          :style="'background-color:' + getColor.cardColor"
+          :dark="$vuetify.theme.dark"
           outlined
         >
           <v-list-item three-line>
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   name: "NewSpeech",
@@ -92,6 +92,9 @@ export default {
     ]
     // speech: null
   }),
+  computed: {
+    ...mapGetters(["getColor"])
+  },
   methods: {
     submitSpeech: function() {
       let obj = {
