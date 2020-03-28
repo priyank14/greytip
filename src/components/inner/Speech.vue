@@ -64,51 +64,56 @@
           </v-list-item>
 
           <v-card-actions>
-            <v-list-item class="grow">
-              <v-list-item-content>
-                <v-list-item-title>
-                  <template v-if="!editMode">
+            <template v-if="!editMode">
+              <v-list-item class="grow">
+                <v-list-item-content>
+                  <v-list-item-title>
                     {{ speech.author }}
                     <div class="caption">- {{ getDate(speech.date) }}</div>
-                  </template>
-                  <template v-else>
-                    <div class="pt-1">
-                      <v-text-field
-                        label="Author"
-                        outlined
-                        v-model="editData.author"
-                        :counter="20"
-                        :rules="authorrules"
-                      ></v-text-field>
-                    </div>
-                  </template>
-                </v-list-item-title>
-              </v-list-item-content>
+                  </v-list-item-title>
+                </v-list-item-content>
 
-              <v-row align="center" justify="end" v-if="!editMode">
-                <v-btn text icon @click="editSpeech">
-                  <v-icon class="mr-1">mdi-pencil</v-icon>
-                </v-btn>
-                <v-btn text icon @click="deleteSpeech">
-                  <v-icon class="mr-1">mdi-delete</v-icon>
-                </v-btn>
-                <v-btn text icon>
-                  <v-icon class="mr-1">mdi-share-variant</v-icon>
-                </v-btn>
+                <v-row align="center" justify="end">
+                  <v-btn text icon @click="editSpeech">
+                    <v-icon class="mr-1">mdi-pencil</v-icon>
+                  </v-btn>
+                  <v-btn text icon @click="deleteSpeech">
+                    <v-icon class="mr-1">mdi-delete</v-icon>
+                  </v-btn>
+                  <v-btn text icon>
+                    <v-icon class="mr-1">mdi-share-variant</v-icon>
+                  </v-btn>
+                </v-row>
+              </v-list-item>
+            </template>
+            <template v-else>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    label="Author"
+                    outlined
+                    v-model="editData.author"
+                    :counter="20"
+                    :rules="authorrules"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="6" md="6" sm="12">
+                  <v-row align="center" justify="center">
+                    <v-btn
+                      color="primary"
+                      :loading="loading"
+                      @click="saveEditAction"
+                    >
+                      Submit
+                    </v-btn>
+                    <v-btn color="error" class="mx-2" @click="cancelEditAction">
+                      Cancel
+                    </v-btn>
+                  </v-row>
+                </v-col>
               </v-row>
-              <v-row align="center" justify="end" v-else>
-                <v-btn
-                  color="primary"
-                  :loading="loading"
-                  @click="saveEditAction"
-                >
-                  Submit
-                </v-btn>
-                <v-btn color="error" class="mx-2" @click="cancelEditAction">
-                  Cancel
-                </v-btn>
-              </v-row>
-            </v-list-item>
+              <div class="pt-1"></div>
+            </template>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -200,3 +205,4 @@ export default {
   }
 };
 </script>
+

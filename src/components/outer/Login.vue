@@ -32,7 +32,7 @@
                 class="ma-4"
                 @click="login"
               >
-                Sign up
+                Log in
               </v-btn>
             </v-form>
           </v-card-text>

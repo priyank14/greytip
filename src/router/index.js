@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-// import firebase from "firebase";
+import firebase from "firebase";
 
 import Home from "../views/Home.vue";
 
@@ -13,40 +13,68 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
-    // meta: {
-    //   requiresAuth: true
-    // }
+    component: Home,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: "/login",
     name: "Login",
-    component: Login
+    component: Login,
+    meta: {
+      requiresGuest: true
+    }
   },
   {
     path: "/signup",
     name: "Signup",
-    component: Signup
+    component: Signup,
+    meta: {
+      requiresGuest: true
+    }
   }
 ];
 
-const router = new VueRouter({
+let router = new VueRouter({
   routes
 });
 
-// router.beforeEach((to, from, next) => {
-//   if (to.matched.some(record => record.meta.requiresAuth)) {
-//     if (!firebase.auth().currentUser) {
-//       next({
-//         path: "/login",
-//         query: {
-//           redirect: to.fullPath
-//         }
-//       });
-//     } else {
-//       next();
-//     }
-//   }
-// });
+// Nav Guard
+router.beforeEach((to, from, next) => {
+  // Check for requiresAuth guard
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // Check if NO logged user
+    if (!firebase.auth().currentUser) {
+      // Go to login
+      next({
+        path: "/login"
+        // query: {
+        //   redirect: to.fullPath
+        // }
+      });
+    } else {
+      // Proceed to route
+      next();
+    }
+  } else if (to.matched.some(record => record.meta.requiresGuest)) {
+    // Check if NO logged user
+    if (firebase.auth().currentUser) {
+      // Go to login
+      next({
+        path: "/"
+        // query: {
+        //   redirect: to.fullPath
+        // }
+      });
+    } else {
+      // Proceed to route
+      next();
+    }
+  } else {
+    // Proceed to route
+    next();
+  }
+});
 
 export default router;

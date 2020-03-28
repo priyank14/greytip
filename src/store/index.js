@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    loader: false,
     snackbar: {
       state: false,
       color: "",
@@ -78,6 +79,9 @@ export default new Vuex.Store({
         element => element.id == state.selectedSpeechId
       );
       state.speeches.splice(index, 1, payload);
+    },
+    SET_LOADER: (state, payload) => {
+      state.loader = payload;
     },
     CREATE_SNACKBAR(state, payload) {
       state.snackbar.state = true;

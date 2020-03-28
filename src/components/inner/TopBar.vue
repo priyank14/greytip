@@ -19,31 +19,16 @@
         style="width:100px;"
       ></v-select>
     </div>
-    <template v-if="!isSearch">
-      <v-spacer />
-      <v-btn icon @click="toggleSearch">
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-    </template>
-    <template v-else>
-      <v-spacer style="flex-grow: 0.25!important;" />
-      <v-text-field
-        v-model="searchText"
-        label="Search in author"
-        append-icon="mdi-clear"
-        :append-icon-cb="() => (isSearch = !isSearch)"
-        hide-details
-        :dark="$vuetify.theme.dark"
-      ></v-text-field>
-      <v-btn icon @click="toggleSearch">
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-    </template>
+    <v-spacer />
+    <v-btn color="primary" @click="logout">
+      Logout
+    </v-btn>
   </v-app-bar>
 </template>
 
 <script>
 import { mapState, mapMutations, mapGetters } from "vuex";
+import firebase from "firebase";
 
 export default {
   name: "TopBar",
@@ -56,10 +41,7 @@ export default {
       type: Function
     }
   },
-  data: () => ({
-    isSearch: false,
-    searchText: ""
-  }),
+  data: () => ({}),
   computed: {
     ...mapState(["selectedTheme"]),
     ...mapGetters(["getThemes", "getColor"])
@@ -79,9 +61,6 @@ export default {
     }
   },
   methods: {
-    toggleSearch: function() {
-      this.isSearch = !this.isSearch;
-    },
     themeChanged(event) {
       console.log("theme changed ");
       if (event == "Light") {
@@ -91,13 +70,15 @@ export default {
       }
       this.SET_THEME(event);
     },
-    ...mapMutations(["SET_SEARCH", "SET_THEME"])
-  },
-  watch: {
-    searchText: function() {
-      let text = this.searchText || "";
-      this.SET_SEARCH(text);
-    }
+    logout: function() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$router.go({ path: this.$router.path });
+        });
+    },
+    ...mapMutations(["SET_THEME"])
   }
 };
 </script>
